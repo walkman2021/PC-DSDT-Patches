@@ -1,0 +1,25 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Generic Fixes
+# Patch Version : 1.0
+
+# Intel 7 Series Fixes
+into_all all code_regex _T_([0-6]) replaceall_matched begin T_%1 end;
+into device label EC0 set_label begin EC end;
+into_all all code_regex EC0 replaceall_matched begin EC end;
+into method label _REG parent_label EC remove_entry;
+into device label COPR set_label begin MATH end;
+into_all all code_regex COPR replaceall_matched begin MATH end;
+into_all all code_regex 0x000EC00 replaceall_matched begin 0x000EC000 end;
+into_all all code_regex 0xFEC0000 replaceall_matched begin 0xFEC00000 end;
+into_all all code_regex (Name\s\(_HID,\s"ABCDEFGH") replace_matched begin Name (_HID, EisaId ("PNP0C15") end;
+into device label SIO1 code_regex 0x00(,\s+//\s+L) replaceall_matched begin 0x01%1 end;
+into_all all code_regex (Acquire\s\(MUT0,\s0x)....\) replace_matched begin %1FFFF) end;
+into_all all code_regex pnp0c14 replaceall_matched begin PNP0C14 end;
+into method label _CRS parent_label PCI0 code_regex CreateDWordField\s\(BUF0,\s\\_SB.PCI0._Y0F._LEN,\sMSLN\) replace_matched begin CreateQWordField (BUF0, \\_SB.PCI0._Y0F._LEN, MSLN) end;
+

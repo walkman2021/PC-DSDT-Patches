@@ -1,0 +1,27 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Marvell 88SE9172 SATA @ RP07
+# Patch Version : 1.0
+
+# Fix the Marvell AHCI
+into device Label PXSX parent_label RP07 replace_content begin
+Name (_ADR, Zero)\n
+Name (_PRW, Package (0x02) {0x09,0x04})\n
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x08) {\n
+		"AAPL,slot-name", "Built In",\n
+		"device_type", "AHCI Controller",\n
+		"name", "Marvell AHCI Controller",\n
+		"model", "Marvell 88SE9172 SATA Controller"\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+

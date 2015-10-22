@@ -1,0 +1,32 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Gigabyte Shutdown Fix
+# Patch Version : 1.0
+
+# Gigabyte Shutdown Fix
+into method label _PTS code_regex (If\s*\(LEqual\s*\(Arg0,\s*0x05\)\)\s*\n\s*\{\s*\n)(?:[^\n\}]+\n)+(\s*\}) replace_matched begin
+%1
+            Store (Zero, SLPE)\n
+            Sleep (0x10)\n
+%2
+end;
+into method label \_PTS code_regex (If\s*\(LEqual\s*\(Arg0,\s*0x05\)\)\s*\n\s*\{\s*\n)(?:[^\n\}]+\n)+(\s*\}) replace_matched begin
+%1
+            Store (Zero, SLPE)\n
+            Sleep (0x10)\n
+%2
+end;
+into definitionblock code_regex . code_regex_not OperationRegion\s*\(PMRS insert begin
+OperationRegion (PMRS, SystemIO, 0x0430, One)\n
+Field (PMRS, ByteAcc, NoLock, Preserve)\n
+{\n
+        ,   4, \n
+    SLPE,   1\n
+}
+end;
+

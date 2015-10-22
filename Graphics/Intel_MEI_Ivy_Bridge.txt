@@ -1,0 +1,29 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Intel MEI Ivy Bridge
+# Patch Version : 1.0
+
+# Warning : This patch is ment for Series 6/7 systems only, no guarantees of use on other systems.
+
+# Add the Intel MEI device
+into device label MEI parent_label PCI0 remove_entry;
+into device label PCI0 insert begin
+Device (MEI)\n
+{\n
+	Name (_ADR, 0x00160000)\n
+	Method (_DSM, 4, NotSerialized)\n
+	{\n
+		Store (Package (0x02) {\n
+			"layout-id", Buffer(0x04) {0x3a,0x1e,0x00,0x00},\n
+		}, Local0)\n
+		DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+		Return (Local0)\n
+	}\n
+}
+end;
+

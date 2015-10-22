@@ -1,0 +1,28 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Intel Gigabit Ethernet
+# Patch Version : 1.0
+
+# Fixes 'Built-in' status for Intel Gigabit Ethernet
+into method label _DSM parent_label GLAN remove_entry;
+into device label GLAN insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x0C) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Intel Ethernet Controller",\n
+		"model", "Intel 82579V Gigabit Network Controller",\n
+		"device_type", Buffer (0x13) {"Ethernet Controller"},\n
+		"built-in", Buffer (One) {0x01},\n
+		"location", Buffer (0x02) {"1"}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+

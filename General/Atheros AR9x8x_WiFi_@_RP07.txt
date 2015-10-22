@@ -1,0 +1,34 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Atheros AR9x8x WiFi @ RP07
+# Patch Version : 1.0
+
+# Fix the Atheros AR9x8x WiFi and rename it to ARPT
+into device label PXSX parent_label RP07 set_label begin ARPT end;
+into method label HPME parent_label RP07 code_regex (Notify\s\()PXSX(,\s0x02\)) replace_matched begin %1ARPT%2 end;
+into device label ARPT parent_label RP07 replace_content begin
+Name (_ADR, Zero)\n
+Name (_PRW, Package (0x02) {0x09,0x04})\n
+Name (_SUN, One)\n
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x10) {\n
+		"AAPL,slot-name", "AirPort",\n
+		"name", "Wireless Network Adapter",\n
+		"model", Buffer () {"Atheros AR9x8x 802.11 a/b/g/n Wireless Network Adapter"},\n
+		"device_type", Buffer (0x07) {"AirPort"},\n
+		"device-id", Unicode ("0"),\n
+		"subsystem-id", Buffer (0x04) {0x8F,0x00,0x00,0x00},\n
+		"subsystem-vendor-id", Buffer (0x04) {0x6B,0x10,0x00,0x00},\n
+		"built-in", Buffer (One) {0x01}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+

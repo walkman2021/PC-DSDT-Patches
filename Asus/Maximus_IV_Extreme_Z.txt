@@ -1,0 +1,190 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Maximus IV Extreme-Z
+# Patch Version : 1.01
+
+#External Fixes
+into_all all code_regex \/\*\sExternal\sreference\s\*\/\s+ removeall_matched;
+into definitionblock code_regex ,\sUnknownObj removeall_matched;
+
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG0\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG0.PEGP\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG1\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG2\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEGP\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEGP.GFX0\)\s+ removeall_matched;
+
+# Add the DTGP method
+into method label DTGP remove_entry;
+into definitionblock code_regex . insert begin
+Method (DTGP, 5, NotSerialized)\n
+{\n
+    If (LEqual (Arg0, Buffer (0x10)\n
+            {\n
+                /* 0000 */    0xC6, 0xB7, 0xB5, 0xA0, 0x18, 0x13, 0x1C, 0x44,\n
+                /* 0008 */    0xB0, 0xC9, 0xFE, 0x69, 0x5E, 0xAF, 0x94, 0x9B\n
+            }))\n
+    {\n
+        If (LEqual (Arg1, One))\n
+        {\n
+            If (LEqual (Arg2, Zero))\n
+            {\n
+                Store (Buffer (One) { 0x03 }, Arg4)\n
+                Return (One)\n
+            }\n
+            If (LEqual (Arg2, One))\n
+            {\n
+                Return (One)\n
+            }\n
+        }\n
+    }\n
+	Store (Buffer (One) { 0x00 }, Arg4)\n
+    Return (Zero)\n
+}
+end;
+
+# Add Darwin to the supported operating systems
+into method label _INI code_regex (\s+)(If\s\(_OSI\s\("Windows\s2001"\)\)) replace_matched begin  \n
+						If (_OSI ("Darwin"))\n
+						{\n
+							Store (0x2710, OSYS)\n
+						}\n
+\n
+						$2
+end;
+
+# Intel 6 Series Fixes
+into_all all code_regex _T_([0-6]) replaceall_matched begin T_%1 end;
+into device label EC0 set_label begin EC end;
+into_all all code_regex EC0 replaceall_matched begin EC end;
+into method label _REG parent_label EC remove_entry;
+into device label MCH set_label begin MCEH end;
+into_all all code_regex _SB.PCI0.MCH._ replaceall_matched begin _SB.PCI0.MCEH._ end;
+into_all all code_regex 0x000EC00 replaceall_matched begin 0x000EC000 end;
+into_all all code_regex 0xFEC0000 replaceall_matched begin 0xFEC00000 end;
+into_all all code_regex (Name\s\(_HID,\s"ABCDEFGH") replace_matched begin Name (_HID, EisaId ("PNP0C15") end;
+into device label SIO1 code_regex 0x00(,\s+//\s+L) replaceall_matched begin 0x01%1 end;
+into_all all code_regex (Acquire\s\(....,\s0x)....\) replace_matched begin %1FFFF) end;
+into_all all code_regex pnp0c14 replaceall_matched begin PNP0C14 end;
+into method label _CRS parent_label PCI0 code_regex CreateDWordField\s\(BUF0,\s\\_SB.PCI0._Y0F._LEN,\sMSLN\) replace_matched begin CreateQWordField (BUF0, \\_SB.PCI0._Y0F._LEN, MSLN) end;
+into method label _CRS parent_label PCI0 code_regex CreateDWordField\s\(BUF0,\s\\_SB.PCI0._Y0F._LEN,\sM4LN\) replace_matched begin CreateQWordField (BUF0, \\_SB.PCI0._Y0F._LEN, M4LN) end;
+into_all all code_regex (Acquire\s\(MUT0,\s0x)....\) replace_matched begin %1FFFF) end;
+into_all all code_regex Name\s\(RPMV,\sPackage\s\(0x00\) replaceall_matched begin Name (RPMV, Package (zero) end;
+into_all all code_regex 0x00,(\s+)//\sLength replaceall_matched begin 0x01,%1// Length end;
+into device name_hid PNP0B00 code_regex (IO\s\((?:\s*[^,]+,\s*(?:\/\/\s.*)?\s*\n)+\s*)(\dx\d+)(,\s*(?:\/\/\s.*)?\s*\n\s*\)) replace_matched begin %10x02%3 end;
+into method label _CRS parent_label TPMX code_regex (Return\s\()(Zero)\) replace_matched begin %1Buffer (%2){}) end;
+into_all all code_regex If\s\(TCMF\)\s\{\} replace_matched begin
+If (TCMF) {\n
+	Return (Zero)\n
+}\n
+end;
+into_all all code_regex Or\s\(0x03,\sPARM\) replaceall_matched begin Or (PARM, 0x03, PARM) end;
+into_all all code_regex (Name\s*\(_PLD,\s*)Buffer(\s\(0x10\)[^\)]*) replaceall_matched begin %1Package() { Buffer%2} end;
+into device label PWRB code_regex (Name\s\()_HID(\,\sEisaId\s\(\"PNP0C0C\"\)\)) replace_matched begin %1_CID%2 end;
+into method label SIOS code_regex Return\s\(Zero\) remove_matched;
+into method label SIOS insert begin Return (Zero) end;
+into method label STM code_regex Return\s\(Zero\) remove_matched;
+into method label STM insert begin Return (Zero) end;
+into_all scope label _PR code_regex Alias\s\([^\n]+\n removeall_matched;
+into_all scope label \_PR code_regex Alias\s\([^\n]+\n removeall_matched;
+
+# Fix HPET
+into device name_hid PNP0103 code_regex IRQNoFlags\s\(\)\s+\{\d+\} removeall_matched;
+into device name_hid PNP0103 code_regex_not IRQNoFlags code_regex Name\s\(([^,]+),\sResourceTemplate\s\(\)\n\s+\{((?:.|\n)*)\}\) replace_matched begin
+Name (%1, ResourceTemplate ()\n{\n
+	IRQNoFlags () {0}\n
+	IRQNoFlags () {8}\n
+	IRQNoFlags () {11}\n
+	IRQNoFlags () {15}\n%2})
+end;
+
+# Add the missing MCHC device
+into device label MCHC parent_label PCI0 remove_entry;
+into device label PCI0 insert begin
+Device (MCHC)\n
+{\n
+	Name (_ADR, Zero)\n
+}
+end;
+
+# Fix the LPC Device
+into method label _DSM parent_label LPCB remove_entry;
+into device label LPCB insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x02) {\n
+		"compatible", Buffer () {"pci8086,1c46"}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+# Fix the SMBUS to allow for loading of the AppleSMBusController.kext
+into device label BUS0 parent_label SBUS remove_entry;
+into device label SBUS insert begin
+Device (BUS0)\n
+{\n
+	Name (_CID, "smbus")\n
+	Name (_ADR, Zero)\n
+	Device (DVL0)\n
+	{\n
+		Name (_ADR, 0x57)\n
+		Name (_CID, "diagsvault")\n
+		Method (_DSM, 4, NotSerialized)\n
+		{\n
+			Store (Package (0x02) {\n
+				"address", 0x57
+			}, Local0)\n
+			DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+			Return (Local0)\n
+		}\n
+	}\n
+}
+end;
+
+# Fix HDEF device for the Realtek ALC898 audio codec
+into method label _DSM parent_label HDEF remove_entry;
+into device label HDEF insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x10) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Realtek Audio Controller",\n
+		"model", Buffer () {"Realtek ALC898 Audio Controller"},\n
+		"device_type", Buffer (0x10) {"Audio Controller"},\n
+		"layout-id", Buffer (0x04) {0x01,0x00,0x00,0x00},\n
+		"PinConfigurations", Buffer (Zero) {},\n
+		"MaximumBootBeepVolume", Buffer(One) {0x40},\n
+		"hda-gfx", Buffer (0x0A) {"onboard-1"}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+# Change ID of SATA device for Intel 6 Series Chipset
+into device label SAT0 set_label begin SATA end;
+into_all all code_regex SAT0 replaceall_matched begin SATA end;
+into device label SAT1 remove_entry;
+into method label _DSM parent_label SATA remove_entry;
+into device label SATA insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x0A) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Intel AHCI Controller",\n
+		"model", Buffer (0x2D) {"Intel 6 Series Chipset Family SATA Controller"},\n
+		"device_type", Buffer (0x0F) {"AHCI Controller"},\n
+		"device-id", Buffer (0x04) {0x03,0x1C,0x00,0x00}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+

@@ -1,0 +1,216 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Z87X-UD3H
+# Patch Version : 1.01
+# Note          : Please apply a graphics patch after applying this patch, available from the graphics repository.
+
+#External Fixes
+into_all all code_regex \/\*\sExternal\sreference\s\*\/\s+ removeall_matched;
+into definitionblock code_regex ,\sUnknownObj removeall_matched;
+
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG0\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG0.PEGP\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG1\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG2\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEGP\)\s+ removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEGP.GFX0\)\s+ removeall_matched;
+
+# Add the DTGP method
+into method label DTGP remove_entry;
+into definitionblock code_regex . insert begin
+Method (DTGP, 5, NotSerialized)\n
+{\n
+    If (LEqual (Arg0, Buffer (0x10)\n
+            {\n
+                /* 0000 */    0xC6, 0xB7, 0xB5, 0xA0, 0x18, 0x13, 0x1C, 0x44,\n
+                /* 0008 */    0xB0, 0xC9, 0xFE, 0x69, 0x5E, 0xAF, 0x94, 0x9B\n
+            }))\n
+    {\n
+        If (LEqual (Arg1, One))\n
+        {\n
+            If (LEqual (Arg2, Zero))\n
+            {\n
+                Store (Buffer (One) { 0x03 }, Arg4)\n
+                Return (One)\n
+            }\n
+            If (LEqual (Arg2, One))\n
+            {\n
+                Return (One)\n
+            }\n
+        }\n
+    }\n
+	Store (Buffer (One) { 0x00 }, Arg4)\n
+    Return (Zero)\n
+}
+end;
+
+# Add Darwin to the supported operating systems
+into method label _INI code_regex (\s+)(If\s\(_OSI\s\("Windows\s2001"\)\)) replace_matched begin  \n
+						If (_OSI ("Darwin"))\n
+						{\n
+							Store (0x2710, OSYS)\n
+						}\n
+\n
+						$2
+end;
+
+# Intel 8 Series Fixes
+into_all all code_regex _T_([0-6]) replaceall_matched begin T_%1 end;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG0\) removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG1\) removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG2\) removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG0.PEGP\) removeall_matched;
+
+into device label PCI0 code_regex (\s+Zero){2,} remove_matched;
+into method label ADBG code_regex (Arg0\s+) remove_matched;
+into_all all code_regex pnp0c14 replaceall_matched begin PNP0C14 end;
+
+into_all all code_regex (Acquire\s\(MUT0,\s0x)....\) replace_matched begin %1FFFF) end;
+into method label ENFG parent_label SIO1 code_regex Acquire\s\(MUT0,\s0x0FFF\) replace_matched begin Acquire (MUT0, 0xFFFF) end;
+
+into method label PR2S parent_label XHC code_regex (Return\s\(Zero\)) remove_matched;
+into method label PR2S parent_label XHC insert begin Return (Zero) end;
+
+into method label _PS0 parent_label XHC code_regex (Return\s\(Zero\)) remove_matched;
+into method label _PS0 parent_label XHC insert begin Return (Zero) end;
+
+into method label _PS3 parent_label XHC code_regex (Return\s\(Zero\)) remove_matched;
+into method label _PS3 parent_label XHC insert begin Return (Zero) end;
+
+into method label SPL1 code_regex (Return\s\(Zero\)) remove_matched;
+into method label SPL1 insert begin Return (Zero) end;
+
+into method label _HID parent_label _SB.TPM code_regex (Return\s\(Zero\)\s*) removeall_matched;
+into method label _HID parent_label _SB.TPM insert begin Return (Zero) end;
+
+## Method GACI in PTMD
+into method label GACI parent_label PTMD code_regex ([\s\S]*) store_%8;
+into method label GACI parent_label PTMD remove_entry;
+into device label PTMD insert begin Method (GACI, 0, Serialized)\n{\n\n} end;
+into method label GACI parent_label PTMD code_regex .* replace_matched begin %8 end;
+
+## Method GDSV in PTMD
+into method label GDSV parent_label PTMD code_regex ([\s\S]*) store_%8;
+into method label GDSV parent_label PTMD remove_entry;
+into device label PTMD insert begin Method (GDSV, 1, Serialized)\n{\n\n} end;
+into method label GDSV parent_label PTMD code_regex .* replace_matched begin %8 end;
+
+## Method GXDV in PTMD
+into method label GXDV parent_label PTMD code_regex ([\s\S]*) store_%8;
+into method label GXDV parent_label PTMD remove_entry;
+into device label PTMD insert begin Method (GXDV, 1, Serialized)\n{\n\n} end;
+into method label GXDV parent_label PTMD code_regex .* replace_matched begin %8 end;
+
+# Fix HDEF device for the Realtek ALC898 audio codec
+into method label _DSM parent_label HDEF remove_entry;
+into device label HDEF insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x10) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Realtek Audio Controller",\n
+		"model", Buffer () {"Realtek ALC898 Audio Controller"},\n
+		"device_type", Buffer (0x10) {"Audio Controller"},\n
+		"layout-id", Buffer (0x04) {0x01,0x00,0x00,0x00},\n
+		"PinConfigurations", Buffer (Zero) {},\n
+		"MaximumBootBeepVolume", Buffer(One) {0x40},\n
+		"hda-gfx", Buffer (0x0A) {"onboard-1"}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+# Fixes 'Built-in' status for Intel Gigabit Ethernet
+into method label _DSM parent_label GLAN remove_entry;
+into device label GLAN insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x0C) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Intel Ethernet Controller",\n
+		"model", "Intel 82579V Gigabit Network Controller",\n
+		"device_type", Buffer (0x13) {"Ethernet Controller"},\n
+		"built-in", Buffer (One) {0x01},\n
+		"location", Buffer (0x02) {"1"}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+# Patches the Intel USB3 on Intel 8 Series chipsets to allow more power output
+#Fix EHC1
+into method label _DSM parent_label EHC1 remove_entry;
+into device label EHC1 insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x15) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Intel EHCI Controller",\n
+		"model", Buffer(0x3E) {"Intel 8 Series Chipset Family USB Enhanced Host Controller #1"},\n
+		"device_type", Buffer (0x0E) {"USB Controller"},\n
+		"AAPL,current-available", 0x0834,\n
+		"AAPL,current-extra", 0x0A8C,\n    
+		"AAPL,current-in-sleep", 0x03E8,\n
+		"AAPL,current-extra-in-sleep", 0x0834,\n
+		"AAPL,max-port-current-in-sleep", 0x0A8C,\n
+		"AAPL,device-internal", 0x02,\n
+		Buffer (One) {0x00}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+#Fix EHC2
+into method label _DSM parent_label EHC2 remove_entry;
+into device label EHC2 insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x15) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Intel EHCI Controller",\n
+		"model", Buffer (0x3E) {"Intel 8 Series Chipset Family USB Enhanced Host Controller #2"},\n
+		"device_type", Buffer (0x0E) {"USB Controller"},\n
+		"AAPL,current-available", 0x0834,\n
+		"AAPL,current-extra", 0x0A8C,\n
+		"AAPL,current-in-sleep", 0x03E8,\n
+		"AAPL,current-extra-in-sleep", 0x0834,\n
+		"AAPL,max-port-current-in-sleep", 0x0A8C,\n
+		"AAPL,device-internal", 0x02,\n
+		Buffer (One) {0x00}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+#Fix XHC1
+into method label _DSM parent_label XHC remove_entry;
+into device label XHC insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x15) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Intel XHCI Controller",\n
+		"model", Buffer (0x37) {"Intel 8 Series Chipset Family USB xHCI Host Controller"},\n
+		"device_type", Buffer (0x0E) {"USB Controller"},\n
+		"AAPL,current-available", 0x0834,\n
+		"AAPL,current-extra", 0x0A8C,\n
+		"AAPL,current-in-sleep", 0x03E8,\n
+		"AAPL,current-extra-in-sleep", 0x0834,\n
+		"AAPL,max-port-current-in-sleep", 0x0A8C,\n
+		"AAPL,device-internal", 0x02,\n
+		Buffer (One) {0x00}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+

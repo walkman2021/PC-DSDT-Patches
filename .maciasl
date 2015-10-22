@@ -1,0 +1,126 @@
+[ASRock] B75M ITX	ASRock/B75M_ITX.txt
+[ASRock] B85M PRO4	ASRock/B85M_PRO4.txt
+[ASRock] H77M	ASRock/H77M.txt
+[ASRock] Z68 Extreme Gen3	ASRock/Z68_Extreme_Gen3.txt
+[ASRock] Z77 Extreme6	ASRock/Z77_Extreme6.txt
+[ASRock] Z77 OC Formula	ASRock/Z77_OC_Formula.txt
+[ASRock] Z77 PRO3	ASRock/Z77_PRO3.txt
+[ASRock] Z77 PRO4	ASRock/Z77_PRO4.txt
+[ASRock] Z77E ITX	ASRock/Z77E_ITX.txt
+[ASRock] Z87 OC Formula	ASRock/Z87_OC_Formula.txt
+[Asus] Generic Sandy Bridge	Asus/Generic_Sandy_Bridge.txt
+[Asus] Generic Series 7	Asus/Generic_Series 7.txt
+[Asus] Generic Series_8	Asus/Generic_Series_8.txt
+[Asus] Maximus IV_Extreme Z	Asus/Maximus_IV_Extreme_Z.txt
+[Asus] Maximus V_Extreme	Asus/Maximus_V_Extreme.txt
+[Asus] Maximus V_Formula	Asus/Maximus_V_Formula.txt
+[Asus] Maximus V_Gene	Asus/Maximus_V_Gene.txt
+[Asus] Maximus VI_(Generic)	Asus/Maximus_VI_(Generic).txt
+[Asus] Maximus VII_(Generic)	Asus/Maximus_VII_(Generic).txt
+[Asus] P8H77 I	Asus/P8H77_I.txt
+[Asus] P8H77 M	Asus/P8H77_M.txt
+[Asus] P8P67 3.1	Asus/P8P67_3.1.txt
+[Asus] P8Z77 I Deluxe	Asus/P8Z77_I_Deluxe.txt
+[Asus] P8Z77 M PRO	Asus/P8Z77_M_PRO.txt
+[Asus] P8Z77 M	Asus/P8Z77_M.txt
+[Asus] P8Z77 V Deluxe	Asus/P8Z77_V_Deluxe.txt
+[Asus] P8Z77 V LE_PLUS	Asus/P8Z77_V_LE_PLUS.txt
+[Asus] P8Z77 V LK	Asus/P8Z77_V_LK.txt
+[Asus] P8Z77 V LX	Asus/P8Z77_V_LX.txt
+[Asus] P8Z77 V Premium	Asus/P8Z77_V_Premium.txt
+[Asus] P8Z77 V PRO	Asus/P8Z77_V_PRO.txt
+[Asus] P8Z77 V	Asus/P8Z77_V.txt
+[Asus] Rampage II Extreme	Asus/Rampage_II_Extreme.txt
+[Asus] Sabertooth Z77	Asus/Sabertooth_Z77.txt
+[Asus] Z87i Deluxe	Asus/Z87i_Deluxe.txt
+[General] ASMedia_ASM1042_USB3_@_RP05	General/ASMedia_ASM1042_USB3_@_RP05.txt
+[General] ASMedia_ASM1042_USB3_@_RP07	General/ASMedia_ASM1042_USB3_@_RP07.txt
+[General] ASMedia_ASM1061_SATA_@_RP05	General/ASMedia_ASM1061_SATA_@_RP05.txt
+[General] ASMedia_ASM1061_SATA_@_RP07	General/ASMedia_ASM1061_SATA_@_RP07.txt
+[General] ASUS_Shutdown_Fix	General/ASUS_Shutdown_Fix.txt
+[General] Atheros AR9x8x_WiFi_@_RP07	General/Atheros AR9x8x_WiFi_@_RP07.txt
+[General] Atheros_AR9x8x_WiFi_@_RP02	General/Atheros_AR9x8x_WiFi_@_RP02.txt
+[General] Atheros_AR9x8x_WiFi_@_RP05	General/Atheros_AR9x8x_WiFi_@_RP05.txt
+[General] Broadcom_BCM4322x_WiFi_@_RP05	General/Broadcom_BCM4322x_WiFi_@_RP05.txt
+[General] Broadcom_BCM4322x_WiFi_@_RP07	General/Broadcom_BCM4322x_WiFi_@_RP07.txt
+[General] Broadcom_BCM4352_WiFi_@_RP02	General/Broadcom_BCM4352_WiFi_@_RP02.txt
+[General] Generic_LAN0_builtin_Fix	General/Generic_LAN0_builtin_Fix.txt
+[General] Gigabyte_Shutdown_Fix	General/Gigabyte_Shutdown_Fix.txt
+[General] Intel_ESB2_SATA_(Orange Icon Fix)	General/Intel_ESB2_SATA_(Orange Icon Fix).txt
+[General] Intel_Shutdown_Fix	General/Intel_Shutdown_Fix.txt
+[General] Marvell_88SE9172_SATA_@_RP05	General/Marvell_88SE9172_SATA_@_RP05.txt
+[General] Marvell_88SE9172_SATA_@_RP07	General/Marvell_88SE9172_SATA_@_RP07.txt
+[General] NEC_D72020x_USB3_@_RP05	General/NEC_D72020x_USB3_@_RP05.txt
+[General] NEC_D72020x_USB3_@_RP07	General/NEC_D72020x_USB3_@_RP07.txt
+[General] USB_Device_Renames_for_OSX 10.11	General/USB_Device_Renames_for_OSX 10.11.txt
+[Gigabyte] B75M D2V	Gigabyte/B75M_D2V.txt
+[Gigabyte] B75M D3H	Gigabyte/B75M_D3H.txt
+[Gigabyte] EP45 UD3P	Gigabyte/EP45_UD3P.txt
+[Gigabyte] G1 Sniper 3	Gigabyte/G1_Sniper_3.txt
+[Gigabyte] Generic Series 7	Gigabyte/Generic_Series_7.txt
+[Gigabyte] Generic Series 8	Gigabyte/Generic_Series_8.txt
+[Gigabyte] H77M D3H	Gigabyte/H77M_D3H.txt
+[Gigabyte] H77N WIFI	Gigabyte/H77N_WIFI.txt
+[Gigabyte] H81M SP1	Gigabyte/H81M_SP1.txt
+[Gigabyte] H87 D3H	Gigabyte/H87_D3H.txt
+[Gigabyte] H87N WIFI	Gigabyte/H87N_WIFI.txt
+[Gigabyte] H97 HD3	Gigabyte/H97_HD3.txt
+[Gigabyte] Z77 DS3H	Gigabyte/Z77_DS3H.txt
+[Gigabyte] Z77MX D3H	Gigabyte/Z77MX_D3H.txt
+[Gigabyte] Z77N WIFI	Gigabyte/Z77N_WIFI.txt
+[Gigabyte] Z77X D3H	Gigabyte/Z77X_D3H.txt
+[Gigabyte] Z77X UD3H	Gigabyte/Z77X_UD3H.txt
+[Gigabyte] Z77X UD5H	Gigabyte/Z77X_UD5H.txt
+[Gigabyte] Z77X UP5 TH	Gigabyte/Z77X_UP5 TH.txt
+[Gigabyte] Z77X UP7	Gigabyte/Z77X_UP7.txt
+[Gigabyte] Z87 D3HP	Gigabyte/Z87_D3HP.txt
+[Gigabyte] Z87 HD3	Gigabyte/Z87_HD3.txt
+[Gigabyte] Z87M D3H	Gigabyte/Z87M_D3H.txt
+[Gigabyte] Z87MX D3H	Gigabyte/Z87MX_D3H.txt
+[Gigabyte] Z87X D3H	Gigabyte/Z87X_D3H.txt
+[Gigabyte] Z87X OC_FORCE	Gigabyte/Z87X_OC_FORCE.txt
+[Gigabyte] Z87X OC	Gigabyte/Z87X_OC.txt
+[Gigabyte] Z87X UD3H	Gigabyte/Z87X_UD3H.txt
+[Gigabyte] Z87X UD4H	Gigabyte/Z87X_UD4H.txt
+[Gigabyte] Z87X UD5-TH	Gigabyte/Z87X_UD5-TH.txt
+[Gigabyte] Z87X UD5H	Gigabyte/Z87X_UD5H.txt
+[Gigabyte] Z87X UD7_TH	Gigabyte/Z87X_UD7_TH.txt
+[Gigabyte] Z97X SLI	Gigabyte/Z97X_SLI.txt
+[Gigabyte] Z97X UD3H	Gigabyte/Z97X_UD3H.txt
+[Gigabyte] Z97X UD5H	Gigabyte/Z97X_UD5H.txt
+[Gigabyte] Z97X UD7_TH	Gigabyte/Z97X_UD7_TH.txt
+[Graphics] Generic Discrete Graphics	Graphics/Generic_Discrete_Graphics.txt
+[Graphics] Intel HD2500	Graphics/Intel_HD2500.txt
+[Graphics] Intel HD3000	Graphics/Intel_HD3000.txt
+[Graphics] Intel HD4000	Graphics/Intel_HD4000.txt
+[Graphics] Intel MEI Haswell	Graphics/Intel_MEI_Haswell.txt
+[Graphics] Intel MEI Ivy Bridge	Graphics/Intel_MEI_Ivy_Bridge.txt
+[Graphics] Intel MEI Sandy Bridge	Graphics/Intel_MEI_Sandy_Bridge.txt
+[Intel Series 6] Generic_Fixes	Intel Series 6/Generic_Fixes.txt
+[Intel Series 6] LPC	Intel Series 6/LPC.txt
+[Intel Series 6] MCHC	Intel Series 6/MCHC.txt
+[Intel Series 6] SATA	Intel Series 6/SATA.txt
+[Intel Series 6] SMBUS	Intel Series 6/SMBUS.txt
+[Intel Series 7] Add MCHC	Intel Series 7/Add_MCHC.txt
+[Intel Series 7] Generic Fixes	Intel Series 7/Generic_Fixes.txt
+[Intel Series 7] Intel Gigabit Etherne	Intel Series 7/Intel_Gigabit_Ethernet.txt
+[Intel Series 7] LPC	Intel Series 7/LPC.txt
+[Intel Series 7] Realtek Gigabit Etherne	Intel Series 7/Realtek_Gigabit_Ethernet.txt
+[Intel Series 7] SATA	Intel Series 7/SATA.txt
+[Intel Series 7] SMBUS	Intel Series 7/SMBUS.txt
+[Intel Series 7] USB Multiplex	Intel Series 7/USB_Multiplex.txt
+[Intel Series 7] USB Power	Intel Series 7/USB_Power.txt
+[Intel Series 8] Add MCHC	Intel Series 8/Add_MCHC.txt
+[Intel Series 8] Generic Fixes	Intel Series 8/Generic_Fixes.txt
+[Intel Series 8] LPC	Intel Series 8/LPC.txt
+[Intel Series 8] SMBUS	Intel Series 8/SMBUS.txt
+[Intel Series 8] USB Power	Intel Series 8/USB_Power.txt
+[Intel Series 9] Add MCHC	Intel Series 9/Add_MCHC.txt
+[Intel Series 9] Generic Fixes	Intel Series 9/Generic_Fixes.txt
+[Intel Series 9] LPC	Intel Series 9/LPC.txt
+[Intel Series 9] SATA	Intel Series 9/SATA.txt
+[Intel Series 9] SMBUS	Intel Series 9/SMBUS.txt
+[Intel Series 9] USB Power	Intel Series 9/USB_Power.txt
+[MSI] MSI Z77A G45	MSI/MSI_Z77A_G45.txt
+[MSI] MSI Z87 G45 GAMING	MSI/MSI_Z87_G45_GAMING.txt
+[Zotac] Z77 IT	Zotac/Z77_ITX.txt

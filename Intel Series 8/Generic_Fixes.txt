@@ -1,0 +1,72 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Generic Fixes
+# Patch Version : 1.0
+
+# Intel 8 Series Fixes
+into_all all code_regex _T_([0-6]) replaceall_matched begin T_%1 end;
+into device label EC0 set_label begin EC end;
+into_all all code_regex EC0 replaceall_matched begin EC end;
+into method label _REG parent_label EC remove_entry;
+into device label COPR set_label begin MATH end;
+into_all all code_regex COPR replaceall_matched begin MATH end;
+into_all all code_regex 0x000EC00 replaceall_matched begin 0x000EC000 end;
+into_all all code_regex 0xFEC0000 replaceall_matched begin 0xFEC00000 end;
+into_all all code_regex (Name\s\(_HID,\s"ABCDEFGH") replace_matched begin Name (_HID, EisaId ("PNP0C15") end;
+into device label SIO1 code_regex 0x00(,\s+//\s+L) replaceall_matched begin 0x01%1 end;
+into_all all code_regex (Acquire\s\(MUT0,\s0x)....\) replace_matched begin %1FFFF) end;
+into_all all code_regex pnp0c14 replaceall_matched begin PNP0C14 end;
+into method label _CRS parent_label PCI0 code_regex CreateDWordField\s\(BUF0,\s\\_SB.PCI0._Y0F._LEN,\sMSLN\) replace_matched begin CreateQWordField (BUF0, \\_SB.PCI0._Y0F._LEN, MSLN) end;
+into_all all code_regex (Return\s\(Package\s\()0x00(\)\s\{\}\)) replace_matched begin %1Zero%2 end;
+into_all all code_regex (Name\s\(XMPT,\sBuffer\s\()0x0000(\)\s\{\}\)) replace_matched begin %1Zero%2 end;
+into method label RDGI parent_label _SB insert begin Return (Zero) end;
+into method label RDGP parent_label _SB insert begin Return (Zero) end;
+into method label SPL1 insert begin Return (Zero) end;
+into method label _DEP parent_label PRT1 code_regex (Return\s\(Package\s\()0x00(\)\s\{\}\)) replace_matched begin %1Zero%2 end;
+into method label _HID parent_label _SB.TPM code_regex (Return\s\(Zero\)\s*) removeall_matched;
+into method label _HID parent_label _SB.TPM insert begin Return (Zero) end;
+
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG0\) removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG1\) removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG2\) removeall_matched;
+into definitionblock code_regex External\s\(_SB_.PCI0.PEG0.PEGP\) removeall_matched;
+
+into method label _DEP parent_label XHC remove_entry;
+into method label PR2S parent_label XHC remove_entry;
+into method label _PS0 parent_label XHC remove_entry;
+into method label _PS3 parent_label XHC remove_entry;
+
+into method label _E1E parent_label _GPE insert begin Return (Zero) end;
+
+into method label ADBG parent_label PRT1 code_regex (Return\s\(Package\s\()0x00(\)\s\{\}\)) remove_matched;
+into method label ADBG replace_content begin
+If (CondRefOf (MDBG))\n
+{\n
+    Return (MDBG)\n
+}\n
+Return (Zero)\n
+end;
+
+into device label SAT0 set_label begin SATA end;
+into_all all code_regex SAT0 replaceall_matched begin SATA end;
+into device label SAT1 remove_entry;
+into method label _DSM parent_label SATA remove_entry;
+into device label SATA insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x08) {\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "Intel AHCI Controller",\n
+		"model", Buffer (0x2D) {"Intel 8 Series Chipset Family SATA Controller"},\n
+		"device_type", Buffer (0x0F) {"AHCI Controller"},\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+

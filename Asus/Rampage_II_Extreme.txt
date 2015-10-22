@@ -1,0 +1,236 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : Rampage II Extreme
+# Patch Version : 1.0
+
+# Add the DTGP method
+into method label DTGP remove_entry;
+into definitionblock code_regex . insert begin
+Method (DTGP, 5, NotSerialized)\n
+{\n
+    If (LEqual (Arg0, Buffer (0x10)\n
+            {\n
+                /* 0000 */    0xC6, 0xB7, 0xB5, 0xA0, 0x18, 0x13, 0x1C, 0x44,\n
+                /* 0008 */    0xB0, 0xC9, 0xFE, 0x69, 0x5E, 0xAF, 0x94, 0x9B\n
+            }))\n
+    {\n
+        If (LEqual (Arg1, One))\n
+        {\n
+            If (LEqual (Arg2, Zero))\n
+            {\n
+                Store (Buffer (One) { 0x03 }, Arg4)\n
+                Return (One)\n
+            }\n
+            If (LEqual (Arg2, One))\n
+            {\n
+                Return (One)\n
+            }\n
+        }\n
+    }\n
+	Store (Buffer (One) { 0x00 }, Arg4)\n
+    Return (Zero)\n
+}
+end;
+
+# Device Renames
+into_all all code_regex _T_([0-6]) replaceall_matched begin T_%1 end;
+
+into device label PIC set_label begin IPIC end;
+into device label DMAD set_label begin DMAC end;
+into device label TMR set_label begin TIMR end;
+into device label RTC0 set_label begin RTC end;
+into device label COPR set_label begin MATH end;
+into device label OMSC set_label begin LDRC end;
+into device label CHN0 set_label begin PRT0 end;
+into device label CHN1 set_label begin PRT1 end;
+into device label EUSB set_label begin EHCI end;
+into device label USBE set_label begin UHCI end;
+into device label USB0 set_label begin UHC1 end;
+into device label USB1 set_label begin UHC2 end;
+into device label USB2 set_label begin UHC3 end;
+into device label USB3 set_label begin UHC4 end;
+into device label USB4 set_label begin UHC5 end;
+into device label USB5 set_label begin UHC6 end;
+into device label USB6 set_label begin UHC7 end;
+into device label USB7 set_label begin UHC8 end;
+into device label AZAL set_label begin HDEF end;
+
+
+into_all all code_regex DMAD replaceall_matched begin DMAC end;
+into_all all code_regex TMR replaceall_matched begin TIMR end;
+into_all all code_regex RTC0 replaceall_matched begin RTC end;
+into_all all code_regex COPR replaceall_matched begin MATH end;
+into_all all code_regex OMSC replaceall_matched begin LDRC end;
+into_all all code_regex CHN0 replaceall_matched begin PRT0 end;
+into_all all code_regex CHN1 replaceall_matched begin PRT1 end;
+into_all all code_regex EUSB replaceall_matched begin EHCI end;
+into_all all code_regex USBE replaceall_matched begin UHCI end;
+into_all all code_regex USB0 replaceall_matched begin UHC1 end;
+into_all all code_regex USB1 replaceall_matched begin UHC2 end;
+into_all all code_regex USB2 replaceall_matched begin UHC3 end;
+into_all all code_regex USB3 replaceall_matched begin UHC4 end;
+into_all all code_regex USB4 replaceall_matched begin UHC5 end;
+into_all all code_regex USB5 replaceall_matched begin UHC6 end;
+into_all all code_regex USB6 replaceall_matched begin UHC7 end;
+into_all all code_regex USB7 replaceall_matched begin UHC8 end;
+into_all all code_regex AZAL replaceall_matched begin HDEF end;
+
+# Nehalem Fixes
+into_all all code_regex pnp0c14 replaceall_matched begin PNP0C14 end;
+into device label SPKR remove_entry;
+into device label FDC remove_entry;
+into device label ^^RMEM remove_entry;
+into device label PWRB code_regex (Name\s\()_HID(\,\sEisaId\s\(\"PNP0C0C\"\)\)) replace_matched begin %1_CID%2 end;
+into_all all code_regex (Acquire\s\(MUTE,\s0x)....\) replace_matched begin %1FFFF) end;
+into_all method label GRPF code_regex Return\s\(Package\s\(0x00\)\s\{\}\) replaceall_matched begin Return (zero) end;
+
+into method label SIT9 code_regex Return\s\(Zero\) remove_matched;
+into method label SIT9 insert begin Return (Zero) end;
+into method label TGET code_regex Return\s\(Zero\) remove_matched;
+into method label TGET insert begin Return (Zero) end;
+into method label VGET code_regex Return\s\(Zero\) remove_matched;
+into method label VGET insert begin Return (Zero) end;
+into method label FGET code_regex Return\s\(Zero\) remove_matched;
+into method label FGET insert begin Return (Zero) end;
+
+# Fix IRQs
+into device name_hid PNP0000 code_regex IRQNoFlags\s\(\)\n\s+\{(\d+)\} remove_matched;
+into device name_hid PNP0100 code_regex IRQNoFlags\s\(\)\n\s+\{(\d+)\} remove_matched;
+into device name_hid PNP0B00 code_regex IRQNoFlags\s\(\)\n\s+\{(\d+)\} remove_matched;
+into device name_hid PNP0103 code_regex IRQNoFlags\s\(\)\n\s+\{(\d+)\} removeall_matched;
+
+# Fix HPET
+into device name_hid PNP0103 code_regex IRQNoFlags\s\(\)\s+\{\d+\} removeall_matched;
+into device name_hid PNP0103 code_regex_not IRQNoFlags code_regex Name\s\(([^,]+),\sResourceTemplate\s\(\)\n\s+\{((?:.|\n)*)\}\) replace_matched begin
+Name (%1, ResourceTemplate ()\n{\n
+	IRQNoFlags () {0}\n
+	IRQNoFlags () {8}\n
+	IRQNoFlags () {11}\n
+	IRQNoFlags () {15}\n%2})
+end;
+
+# Fix HDEF for the Analog Devices AD2000b audio codec
+into method label _DSM parent_label HDEF remove_entry;
+into device label HDEF insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x14) {\n
+		"device-type", "Analog Devices AD2000B",\n
+		"model", "AD2000B",\n
+		"subsystem-id", Buffer (0x04) {0xA0,0x00,0x00,0x00},\n
+		"subsystem-vendor-id", Buffer (0x04) {0x6B,0x10,0x00,0x00},\n
+		"codec-id", Buffer (0x04) {0x9B,0x98,0xD4,0x11},\n
+		"hda-gfx", Buffer (0x0A) {"onboard-1"},\n
+		"layout-id", Buffer (0x04) {0x0C,0x00,0x00,0x00},\n
+		"PinConfigurations", Buffer (One) {0x00},\n
+		"MaximumBootBeepVolume", Buffer(One) {0x40},\n
+		"hda-gfx", Buffer (0x0A) {"onboard-1"}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+# Fix the LPC Device
+into method label _DSM parent_label LPCB remove_entry;
+into device label LPCB insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x02) {\n
+		"compatible", Buffer () {"pci8086,3b09"}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+# Change ID of SATA device for Intel Nehalem Chipset
+into method label _DSM parent_adr 0x001F0000 remove_entry;
+into device name_adr 0x001F0000 insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x02) {\n
+		"device-id", Buffer (0x04) {0x18,0x3A,0x00,0x00}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+# Fix the Nehalem SMBUS to allow for loading of the AppleSMBusController.kext
+into device name_adr 0x001F0003 parent_label PCI0 remove_entry;
+into device label PCI0 insert begin
+Device (SBUS)\n
+{\n
+    Name (_ADR, 0x001F0003)\n
+	Device (BUS0)\n
+	{\n
+		Name (_CID, "smbus")\n
+		Name (_ADR, Zero)\n
+		Device (DVL0)\n
+		{\n
+			Name (_ADR, 0x57)\n
+			Name (_CID, "diagsvault")\n
+			Method (_DSM, 4, NotSerialized)\n
+			{\n
+				Store (Package (0x02) {\n
+					"address", 0x57\n
+				}, Local0)\n
+				DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+				Return (Local0)\n
+			}\n
+		}\n
+	}\n
+	Method (_DSM, 4, NotSerialized)\n
+	{\n
+		Store (Package (0x02) {\n
+			"device-id", Buffer (0x04) {0x30,0x3A,0x00,0x00}\n
+		}, Local0)\n
+		DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+		Return (Local0)\n
+	}\n
+}
+end;
+
+# Patches the USB for Intel Nehalem chipset
+# Fix EHCI
+into method label _DSM parent_label EHCI remove_entry;
+into device label EHCI insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x04) {\n
+		"AAPL,clock-id", Buffer (One) { 0x01 },\n
+		"device_type", "EHCI"\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+# UCHI Fix
+into method label _DSM parent_label UCHI remove_entry;
+into device label UCHI insert begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x04) {\n
+		"AAPL,clock-id", Buffer (One) { 0x02 },\n
+		"device_type", "EHCI"\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+
+# ASUS Shutdown Fix
+into method label _PTS code_regex_not If\s*\(LEqual\s*\(Arg0,\s*0x05\)\) code_regex ^((?:.|\n)*)$ replace_matched begin
+        If (LEqual (Arg0, 0x05)) {}\n
+        Else\n
+        {\n
+%1
+        }
+end;
+

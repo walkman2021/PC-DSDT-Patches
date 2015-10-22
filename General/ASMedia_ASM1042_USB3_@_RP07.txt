@@ -1,0 +1,35 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : ASMedia ASM1042 USB3 @ RP07
+# Patch Version : 1.0
+
+# Fix the ASMedia ASM1042 USB 3.0 xHCI
+into device Label PXSX parent_label RP07 replace_content  begin
+Name (_ADR, Zero)\n
+Name (_PRW, Package (0x02) {0x09,0x04})\n
+Method (_DSM, 4, NotSerialized)\n
+{\n
+	Store (Package (0x17) {\n
+		"AAPL,clock-id", Buffer (One) { 0x02 },\n
+		"AAPL,slot-name", "Built In",\n
+		"name", "ASMedia xHCI Controller",\n
+		"model", "ASMedia ASM1042 USB xHCI Controller",\n
+		"device_type", Buffer (0x0E) {"USB Controller"},\n
+		"AAPL,current-available", 0x0834,\n
+		"AAPL,current-extra", 0x0A8C,\n
+		"AAPL,current-in-sleep", 0x03E8,\n
+		"AAPL,current-extra-in-sleep", 0x0834,\n
+		"AAPL,max-port-current-in-sleep", 0x0A8C,\n
+		"AAPL,device-internal", 0x02,\n
+		Buffer (One) {0x00}\n
+	}, Local0)\n
+	DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))\n
+	Return (Local0)\n
+}
+end;
+

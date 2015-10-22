@@ -1,0 +1,19 @@
+# Maintained by: PJALM (help@pjalm.com) for: http://pjalm.com/repos/
+
+# These patches are the registered property of PJALM.COM and can not be
+# redistributed or modified without the written consent of PJALM.COM.
+# Links to these patches are allowed. All material is protected under the DMCA.
+
+# Last Updated  : 10/12/2015
+# Patch Name    : ASUS Shutdown Fix
+# Patch Version : 1.0
+
+# ASUS Shutdown Fix
+into method label _PTS code_regex_not If\s*\(LEqual\s*\(Arg0,\s*0x05\)\) code_regex ^((?:.|\n)*)$ replace_matched begin
+        If (LEqual (Arg0, 0x05)) {}\n
+        Else\n
+        {\n
+%1
+        }
+end;
+
