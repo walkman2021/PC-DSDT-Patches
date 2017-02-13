@@ -33,6 +33,27 @@
 [Asus] Rampage II Extreme	Asus/Rampage_II_Extreme.txt
 [Asus] Sabertooth Z77	Asus/Sabertooth_Z77.txt
 [Asus] Z87i Deluxe	Asus/Z87i_Deluxe.txt
+[Asus notebooks] ALS Patch (Haswell).txt
+[Asus notebooks] ALS Patch.txt
+[Asus notebooks] Alternate BT Fn key patch.txt
+[Asus notebooks] Asus ACPI Backlight PNLF-IGPU-Patch.txt
+[Asus notebooks] Asus ACPI Backlight PNLF-Intel-GFX0-Patch.txt
+[Asus notebooks] Asus ACPI Backlight PNLF-NVIDIA-Patch-G50.txt
+[Asus notebooks] Asus ACPI Backlight PNLF-NVIDIA-Patch-G750.txt
+[Asus notebooks] Battery Patch.txt
+[Asus notebooks] Fn Brightness Keys Patch.txt
+[Asus notebooks] FnKeys as Function Keys Patch.txt
+[Asus notebooks] Keyboard Backlight Sleep Fix.txt
+[Asus notebooks] KeyboardBacklight 16Levels Patch (Nehelem).txt
+[Asus notebooks] KeyboardBacklight 16Levels Patch.txt
+[Asus notebooks] KeyboardBacklight Patch.txt
+[Asus notebooks] OS-Patch.txt
+[Asus notebooks] Optional Fn key patches (old notebooks).txt
+[Asus notebooks] Optional Fn key patches.txt
+[Asus notebooks] WiFi BT LED status fix.txt
+[Asus notebooks] WiFi BT Toggle Patch (2 toggles).txt
+[Asus notebooks] WiFi BT Toggle Patch (4 toggles).txt
+[Asus notebooks] ZenBooks LidSleep and ScreenBackLight Patch.txt
 [General] ASMedia_ASM1042_USB3_@_RP05	General/ASMedia_ASM1042_USB3_@_RP05.txt
 [General] ASMedia_ASM1042_USB3_@_RP07	General/ASMedia_ASM1042_USB3_@_RP07.txt
 [General] ASMedia_ASM1061_SATA_@_RP05	General/ASMedia_ASM1061_SATA_@_RP05.txt
