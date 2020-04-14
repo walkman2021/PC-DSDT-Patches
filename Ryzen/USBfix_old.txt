@@ -1,0 +1,5 @@
+#Maintained by: AlGrey for: Ryzen
+#USBfix_old.txt
+
+into device label POT1 parent_label RHUB remove_entry;
+into device label POT2 parent_label RHUB remove_entry;

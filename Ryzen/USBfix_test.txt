@@ -1,0 +1,53 @@
+#Maintained by: AlGrey for: Ryzen
+#USBfix_test.txt
+
+into scope label _SB.PCI0.GP17.XHC0 remove_entry;
+
+into device label RHUB parent_label XHC0 remove_entry;
+into device label RHUB parent_label AS43 remove_entry;
+into device label POT1 parent_label RHUB remove_entry;
+into device label POT2 parent_label RHUB remove_entry;
+
+into device label XHC0 insert
+begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+    If (LNot (Arg2)) { Return (Buffer(One) { 0x03 } ) }\n
+    Return (Package(0x0a)\n
+    {\n
+        "kUSBSleepPortCurrentLimit",\n
+	0x0834,\n
+	"kUSBSleepPowerSupply",\n
+	0x13EC,\n
+	"kUSBWakePortCurrentLimit",\n
+	0x0834,\n
+	"kUSBWakePowerSupply",\n
+	0x13EC,\n
+	"kUSBSHostControllerDisableUSB3LPM",\n
+	0x01\n
+
+    })\n
+}\n
+end;
+
+into device label AS43 insert
+begin
+Method (_DSM, 4, NotSerialized)\n
+{\n
+    If (LNot (Arg2)) { Return (Buffer(One) { 0x03 } ) }\n
+    Return (Package(0x0a)\n
+    {\n
+        "kUSBSleepPortCurrentLimit",\n
+	0x0834,\n
+	"kUSBSleepPowerSupply",\n
+	0x13EC,\n
+	"kUSBWakePortCurrentLimit",\n
+	0x0834,\n
+	"kUSBWakePowerSupply",\n
+	0x13EC,\n
+	"kUSBSHostControllerDisableUSB3LPM",\n
+	0x01\n
+
+    })\n
+}\n
+end;
